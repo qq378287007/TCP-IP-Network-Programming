@@ -3,9 +3,6 @@
     "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt -lws2_32 && $dir$fileNameWithoutExt"
   },
   "files.associations": {
-    "winsock2.h": "c",
-    "fcntl.h": "c",
-    "stdio.h": "c",
-    "unistd.h": "c"
+    "winsock2.h": "c"
   }
 }
