@@ -19,9 +19,9 @@ int main(int argc, char *argv[])
 
     SOCKET hSock = socket(PF_INET, SOCK_STREAM, 0);
     if (hSock == INVALID_SOCKET)
-        ErrorHanding("socket() error");
+        ErrorHanding("socket() error!");
 
-    int szAddr = sizeof(SOCKADDR_IN);
+    const int szAddr = sizeof(SOCKADDR_IN);
 
     SOCKADDR_IN servAddr;
     memset(&servAddr, 0, szAddr);
@@ -30,21 +30,22 @@ int main(int argc, char *argv[])
     servAddr.sin_port = htons(PORT);
 
     if (connect(hSock, (SOCKADDR *)&servAddr, szAddr) == SOCKET_ERROR)
-        ErrorHanding("connect() error");
+        ErrorHanding("connect() error!");
 
     int strLen = 0;
 
     int readLen;
     char message[30];
-    for (int idx = 0; readLen = recv(hSock, &message[idx], 1, 0); idx++)
+    int idx = 0; 
+    for (; readLen = recv(hSock, &message[idx], 1, 0); idx++)
     {
         if (readLen == -1)
-            ErrorHanding("recv() error");
+            ErrorHanding("recv() error!");
         strLen += readLen;
     }
     message[strLen] = '\0';
     printf("Message from server: %s\n", message);
-    printf("Function recv call count: %d\n", strLen);
+    printf("Function recv call count: %d\n", idx);
 
     closesocket(hSock);
 
