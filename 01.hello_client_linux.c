@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 {
 	int sock = socket(PF_INET, SOCK_STREAM, 0);
 	if (sock == -1)
-		error_handling("socket() error");
+		error_handling("socket() error!");
 
 	socklen_t addr_size = sizeof(struct sockaddr_in);
 
@@ -30,15 +30,15 @@ int main(int argc, char *argv[])
 	addr.sin_port = htons(PORT);
 
 	if (connect(sock, (struct sockaddr *)&addr, addr_size) == -1)
-		error_handling("connect() error");
+		error_handling("connect() error!");
 
 	char message[30];
 	int str_len = read(sock, message, sizeof(message) - 1);
 	if (str_len == -1)
-		error_handling("read() error");
+		error_handling("read() error!");
 	message[str_len] = '\0';
 
-	printf("Message from server : %s \n", message);
+	printf("Message from server : %s\n", message);
 
 	close(sock);
 

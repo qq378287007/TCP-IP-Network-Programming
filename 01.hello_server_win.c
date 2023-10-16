@@ -18,11 +18,11 @@ int main(int argc, char *argv[])
 
     SOCKET hServSock = socket(PF_INET, SOCK_STREAM, 0);
     if (hServSock == INVALID_SOCKET)
-        ErrorHanding("socket() error");
+        ErrorHanding("socket() error!");
 
-    int opt = 1;
+    const int opt = 1;
     if (setsockopt(hServSock, SOL_SOCKET, SO_REUSEADDR, (const char *)&opt, sizeof(opt)) < 0)
-        ErrorHanding("setsockopt() error");
+        ErrorHanding("setsockopt() error!");
 
     int szAddr = sizeof(SOCKADDR_IN);
 
@@ -33,15 +33,15 @@ int main(int argc, char *argv[])
     servAddr.sin_port = htons(PORT);
 
     if (bind(hServSock, (SOCKADDR *)&servAddr, szAddr) == SOCKET_ERROR)
-        ErrorHanding("bind() error");
+        ErrorHanding("bind() error!");
 
     if (listen(hServSock, 5) == SOCKET_ERROR)
-        ErrorHanding("listen() error");
+        ErrorHanding("listen() error!");
 
     SOCKADDR_IN clntAddr;
     SOCKET hClntSock = accept(hServSock, (SOCKADDR *)&clntAddr, &szAddr);
     if (hClntSock == INVALID_SOCKET)
-        ErrorHanding("accept() error");
+        ErrorHanding("accept() error!");
 
     char message[] = "Hello World!";
     send(hClntSock, message, sizeof(message)-1, 0);

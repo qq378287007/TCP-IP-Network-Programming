@@ -15,10 +15,10 @@ int main(int argc, char *argv[])
 	int fd = open("data.txt", O_CREAT | O_WRONLY | O_TRUNC);
 	if (fd == -1)
 		error_handling("open() error");
-	printf("file descriptor: %d \n", fd);
+	printf("file descriptor: %d\n", fd);
 
 	char buf[] = "Let's go!\n";
-	if (write(fd, buf, sizeof(buf)-1) == -1)
+	if (write(fd, buf, strlen(buf)) == -1)
 		error_handling("write() error");
 
 	close(fd);
