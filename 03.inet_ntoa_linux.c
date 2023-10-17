@@ -21,3 +21,4 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+// gcc 03.inet_ntoa_linux.c -o 03.inet_ntoa_linux && ./03.inet_ntoa_linux

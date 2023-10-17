@@ -20,11 +20,11 @@ int main(int argc, char *argv[])
 
     SOCKET hServSock = socket(PF_INET, SOCK_STREAM, 0);
     if (hServSock == INVALID_SOCKET)
-        ErrorHanding("socket() error");
+        ErrorHanding("socket() error!");
 
     int opt = 1;
     if (setsockopt(hServSock, SOL_SOCKET, SO_REUSEADDR, (const char *)&opt, sizeof(opt)) < 0)
-        ErrorHanding("setsockopt() error");
+        ErrorHanding("setsockopt() error!");
 
     int szAddr = sizeof(SOCKADDR_IN);
 
@@ -35,24 +35,24 @@ int main(int argc, char *argv[])
     servAddr.sin_port = htons(PORT);
 
     if (bind(hServSock, (SOCKADDR *)&servAddr, szAddr) == SOCKET_ERROR)
-        ErrorHanding("bind() error");
+        ErrorHanding("bind() error!");
 
     if (listen(hServSock, 5) == SOCKET_ERROR)
-        ErrorHanding("listen() error");
+        ErrorHanding("listen() error!");
 
     for (int i = 0; i < 5; i++)
     {
         SOCKADDR_IN clntAddr;
         SOCKET hClntSock = accept(hServSock, (SOCKADDR *)&clntAddr, &szAddr);
-        // if(hClntSock==INVALID_SOCKET)
-        if (hClntSock == -1)
-            ErrorHanding("accept() error");
+        if (hClntSock == INVALID_SOCKET)
+            // if (hClntSock == -1)
+            ErrorHanding("accept() error!");
         else
             printf("Connected client %d\n", i + 1);
 
         char message[BUF_SIZE];
         int strLen;
-        while ((strLen = recv(hClntSock, message, BUF_SIZE-1, 0)) != 0)
+        while ((strLen = recv(hClntSock, message, BUF_SIZE - 1, 0)) != 0)
             send(hClntSock, message, strLen, 0);
 
         closesocket(hClntSock);
@@ -64,3 +64,4 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+// gcc 04.echo_server_win.c -o 04.echo_server_win -lws2_32 && 04.echo_server_win

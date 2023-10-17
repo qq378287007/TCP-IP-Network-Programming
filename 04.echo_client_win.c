@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
 	SOCKET hSock = socket(PF_INET, SOCK_STREAM, 0);
 	if (hSock == INVALID_SOCKET)
-		ErrorHanding("socket() error");
+		ErrorHanding("socket() error!");
 
 	int szAddr = sizeof(SOCKADDR_IN);
 
@@ -32,13 +32,12 @@ int main(int argc, char *argv[])
 	servAddr.sin_port = htons(PORT);
 
 	if (connect(hSock, (SOCKADDR *)&servAddr, szAddr) == SOCKET_ERROR)
-		ErrorHanding("connect() error");
+		ErrorHanding("connect() error!");
 	else
 		puts("Connected.......");
 
 	while (1)
 	{
-
 		fputs("Input message(Q to quit): ", stdout);
 		char message[BUF_SIZE] = {0};
 		fgets(message, BUF_SIZE, stdin);
@@ -53,7 +52,7 @@ int main(int argc, char *argv[])
 		{
 			int recvCnt = recv(hSock, &message[recvLen], BUF_SIZE - 1 - recvLen, 0);
 			if (recvCnt == SOCKET_ERROR)
-				ErrorHanding("recv() error");
+				ErrorHanding("recv() error!");
 			recvLen += recvCnt;
 		}
 		message[strLen] = 0;
@@ -66,3 +65,5 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+
+// gcc 04.echo_client_win.c -o 04.echo_client_win -lws2_32 && 04.echo_client_win

@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 {
 	int sock = socket(PF_INET, SOCK_STREAM, 0);
 	if (sock == -1)
-		error_handling("socket() error");
+		error_handling("socket() error!");
 
 	socklen_t addr_size = sizeof(struct sockaddr_in);
 
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 	addr.sin_port = htons(PORT);
 
 	if (connect(sock, (struct sockaddr *)&addr, addr_size) == -1)
-		error_handling("connect() error");
+		error_handling("connect() error!");
 	else
 		puts("Connected......");
 
@@ -50,14 +50,16 @@ int main(int argc, char *argv[])
 		{
 			int recv_cnt = read(sock, &message[recv_len], BUF_SIZE - 1 - recv_len);
 			if (recv_cnt == -1)
-				error_handling("read() error");
+				error_handling("read() error!");
 			recv_len += recv_cnt;
 		}
 		message[recv_len] = 0;
-		printf("Message from server : %s\n", message);
+		printf("Message from server: %s\n", message);
 	}
 
 	close(sock);
 
 	return 0;
 }
+
+// gcc 04.echo_client_linux.c -o 04.echo_client_linux && ./04.echo_client_linux

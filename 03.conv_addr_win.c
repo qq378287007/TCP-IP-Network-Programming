@@ -29,3 +29,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 03.conv_addr_win.c -o 03.conv_addr_win -lws2_32 && 03.conv_addr_win
