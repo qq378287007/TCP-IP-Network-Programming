@@ -51,3 +51,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 01.hello_server_linux.c -o 01.hello_server_linux && ./01.hello_server_linux

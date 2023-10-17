@@ -51,3 +51,9 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+
+// linux
+// gcc 01.fd_seri.c -o 01.fd_seri && ./01.fd_seri
+
+// mingw
+// gcc 01.fd_seri.c -o 01.fd_seri -lws2_32 && 01.fd_seri

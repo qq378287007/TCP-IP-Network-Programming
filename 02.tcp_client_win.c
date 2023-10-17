@@ -53,3 +53,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 02.tcp_client_win.c -o 02.tcp_client_win -lws2_32 && 02.tcp_client_win

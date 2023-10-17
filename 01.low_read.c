@@ -30,3 +30,5 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+
+// gcc 01.low_read.c -o 01.low_read && ./01.low_read

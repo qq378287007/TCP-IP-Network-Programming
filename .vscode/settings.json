@@ -1,6 +1,6 @@
 {
   "code-runner.executorMap": {
-    "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt -lws2_32 && $dir$fileNameWithoutExt"
+    "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt"
   },
   "files.associations": {
     "winsock2.h": "c",

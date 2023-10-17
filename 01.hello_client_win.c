@@ -45,3 +45,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 01.hello_client_win.c -o 01.hello_client_win -lws2_32  && 01.hello_client_win
