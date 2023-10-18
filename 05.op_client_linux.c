@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 {
     int sock = socket(PF_INET, SOCK_STREAM, 0);
     if (sock == -1)
-        error_handling("socket() error");
+        error_handling("socket() error!");
 
     socklen_t addr_size = sizeof(struct sockaddr_in);
 
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     addr.sin_port = htons(PORT);
 
     if (connect(sock, (struct sockaddr *)&addr, addr_size) == -1)
-        error_handling("connect() error");
+        error_handling("connect() error!");
     else
         puts("Connected......");
 
@@ -60,6 +60,8 @@ int main(int argc, char *argv[])
     printf("Operation result: %d\n", result);
 
     close(sock);
-    
+
     return 0;
 }
+
+// gcc 05.op_client_linux.c -o 05.op_client_linux && ./05.op_client_linux

@@ -44,11 +44,11 @@ int main(int argc, char *argv[])
 
     SOCKET hServSock = socket(PF_INET, SOCK_STREAM, 0);
     if (hServSock == INVALID_SOCKET)
-        ErrorHanding("socket() error");
+        ErrorHanding("socket() error!");
 
     int opt = 1;
     if (setsockopt(hServSock, SOL_SOCKET, SO_REUSEADDR, (const char *)&opt, sizeof(opt)) < 0)
-        ErrorHanding("setsockopt() error");
+        ErrorHanding("setsockopt() error!");
 
     int szAddr = sizeof(SOCKADDR_IN);
 
@@ -59,10 +59,10 @@ int main(int argc, char *argv[])
     servAddr.sin_port = htons(PORT);
 
     if (bind(hServSock, (SOCKADDR *)&servAddr, szAddr) == SOCKET_ERROR)
-        ErrorHanding("bind() error");
+        ErrorHanding("bind() error!");
 
     if (listen(hServSock, 5) == SOCKET_ERROR)
-        ErrorHanding("listen() error");
+        ErrorHanding("listen() error!");
 
     for (int i = 0; i < 5; i++)
     {
@@ -70,17 +70,17 @@ int main(int argc, char *argv[])
         SOCKET hClntSock = accept(hServSock, (SOCKADDR *)&clntAddr, &szAddr);
         // if(hClntSock==INVALID_SOCKET)
         if (hClntSock == -1)
-            ErrorHanding("accept() error");
+            ErrorHanding("accept() error!");
         else
             printf("Connected client %d\n", i + 1);
 
         int opnd_cnt = 0;
-        //接收一个字节，数值个数
+        // 接收一个字节，数值个数
         recv(hClntSock, (char *)&opnd_cnt, 1, 0);
 
         char opinfo[BUF_SIZE];
         int recv_len = 0;
-        //接收opnd_cnt个数值+1个运算符
+        // 接收opnd_cnt个数值+1个运算符
         while (recv_len < OPSZ * opnd_cnt + 1)
         {
             int recv_cnt = recv(hClntSock, &opinfo[recv_len], BUF_SIZE - 1 - recv_len, 0);
@@ -99,3 +99,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 05.op_client_win.c -o 05.op_client_win -lws2_32 && 05.op_client_win

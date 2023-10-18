@@ -43,11 +43,11 @@ int main(int argc, char *argv[])
 {
     int serv_sock = socket(PF_INET, SOCK_STREAM, 0);
     if (serv_sock == -1)
-        error_handling("socket() error");
+        error_handling("socket() error!");
 
-    int opt = 1;
+    const int opt = 1;
     if (setsockopt(serv_sock, SOL_SOCKET, SO_REUSEADDR, (const void *)&opt, sizeof(opt)) == -1)
-        error_handling("setsockopt() error");
+        error_handling("setsockopt() error!");
 
     socklen_t addr_size = sizeof(struct sockaddr_in);
 
@@ -58,17 +58,17 @@ int main(int argc, char *argv[])
     serv_addr.sin_port = htons(PORT);
 
     if (bind(serv_sock, (struct sockaddr *)&serv_addr, addr_size) == -1)
-        error_handling("bind() error");
+        error_handling("bind() error!");
 
     if (listen(serv_sock, 5) == -1)
-        error_handling("listen() error");
+        error_handling("listen() error!");
 
     for (int i = 0; i < 5; i++)
     {
         struct sockaddr_in clnt_addr;
         int clnt_sock = accept(serv_sock, (struct sockaddr *)&clnt_addr, &addr_size);
         if (clnt_sock == -1)
-            error_handling("accept() error");
+            error_handling("accept() error!");
         else
             printf("Connected client %d\n", i + 1);
 
@@ -95,3 +95,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 05.op_server_linux.c -o 05.op_server_linux && ./05.op_server_linux
