@@ -30,16 +30,24 @@ int main(int argc, char *argv[])
     addr.sin_addr.s_addr = inet_addr(IP);
     addr.sin_port = htons(PORT);
 
-    char message1[] = "Hi!";
-    sendto(sock, message1, strlen(message1), 0, (struct sockaddr *)&addr, addr_size);
+    while (1)
+    {
+        fputs("Input message(Q to quit): ", stdout);
+        char message[BUF_SIZE] = {0};
+        fgets(message, BUF_SIZE - 1, stdin);
 
-    char message2[] = "I'm another UDP host!";
-    sendto(sock, message2, strlen(message2), 0, (struct sockaddr *)&addr, addr_size);
+        if (!strcmp(message, "q\n") || !strcmp(message, "Q\n"))
+            break;
 
-    char message3[] = "Nice to meet you!";
-    sendto(sock, message3, strlen(message3), 0, (struct sockaddr *)&addr, addr_size);
+        sendto(sock, message, strlen(message), 0, (struct sockaddr *)&addr, addr_size);
+        int str_len = recvfrom(sock, message, BUF_SIZE - 1, 0, (struct sockaddr *)&addr, &addr_size);
+
+        message[str_len] = 0;
+        printf("Message from server : %s\n", message);
+    }
 
     close(sock);
-    
+
     return 0;
 }
+// gcc 06.uecho_client_linux.c -o 06.uecho_client_linux && ./06.uecho_client_linux

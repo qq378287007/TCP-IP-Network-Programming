@@ -47,3 +47,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 06.bound_server_linux.c -o 06.bound_server_linux && ./06.bound_server_linux

@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     {
         char message[BUF_SIZE];
         SOCKADDR_IN clnt_addr;
-        int str_len = recvfrom(serv_sock, message, BUF_SIZE-1, 0, (SOCKADDR *)&clnt_addr, &addr_size);
+        int str_len = recvfrom(serv_sock, message, BUF_SIZE - 1, 0, (SOCKADDR *)&clnt_addr, &addr_size);
         sendto(serv_sock, message, str_len, 0, (SOCKADDR *)&clnt_addr, addr_size);
     }
 
@@ -48,3 +48,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 06.uecho_server_win.c -o 06.uecho_server_win -lws2_32 && 06.uecho_server_win

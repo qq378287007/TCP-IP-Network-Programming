@@ -34,3 +34,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 09.sock_type_linux.c -o 09.sock_type_linux && ./09.sock_type_linux

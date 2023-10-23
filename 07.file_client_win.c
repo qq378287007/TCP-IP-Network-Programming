@@ -20,8 +20,8 @@ int main(int argc, char *argv[])
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 		ErrorHanding("WSAStartup() error!");
 
-	SOCKET sock = socket(PF_INET, SOCK_DGRAM, 0);
-	if (sock == INVALID_SOCKET)
+	SOCKET sock = socket(PF_INET, SOCK_STREAM, 0);
+	if (sock == -1)
 		ErrorHanding("socket() error");
 
 	int addr_size = sizeof(SOCKADDR_IN);
@@ -32,24 +32,19 @@ int main(int argc, char *argv[])
 	addr.sin_addr.s_addr = inet_addr(IP);
 	addr.sin_port = htons(PORT);
 
-	//向UDP套接字注册目标IP和端口信息
-	connect(sock, (SOCKADDR *)&addr, addr_size);
+	if (connect(sock, (SOCKADDR *)&addr, addr_size) == SOCKET_ERROR)
+		ErrorHanding("connect() error");
 
-	while (1)
-	{
-		fputs("Input message(Q to quit): ", stdout);
-		char message[BUF_SIZE] = {0};
-		fgets(message, BUF_SIZE - 1, stdin);
+	FILE *fp = fopen("receive.dat", "wb");
+	char buf[BUF_SIZE];
+	int read_cnt;
+	while ((read_cnt = recv(sock, buf, BUF_SIZE, 0)) != 0)
+		fwrite((void *)buf, 1, read_cnt, fp);
+	fclose(fp);
 
-		if (!strcmp(message, "q\n") || !strcmp(message, "Q\n"))
-			break;
+	puts("Received file data");
 
-		send(sock, message, strlen(message), 0);
-
-		int str_len = recv(sock, message, sizeof(message) - 1, 0);
-		message[str_len] = 0;
-		printf("Message from server : %s\n", message);
-	}
+	send(sock, "Thank you", 10, 0);
 
 	closesocket(sock);
 
@@ -57,3 +52,5 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+
+// gcc 07.file_client_win.c -o 07.file_client_win -lws2_32 && 07.file_client_win

@@ -61,3 +61,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 09.reuseaddr_eserver_linux.c -o 09.reuseaddr_eserver_linux && ./09.reuseaddr_eserver_linux

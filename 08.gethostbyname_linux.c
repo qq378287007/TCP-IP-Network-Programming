@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <winsock2.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <netdb.h>
 
 #define URL "www.baidu.com"
 
-void ErrorHanding(const char *message)
+void error_handling(const char *message)
 {
     fputs(message, stderr);
     fputc('\n', stderr);
@@ -13,13 +15,9 @@ void ErrorHanding(const char *message)
 
 int main(int argc, char *argv[])
 {
-    WSADATA wsaData;
-    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-        ErrorHanding("WSAStartup() error!");
-
     struct hostent *host = gethostbyname(URL);
     if (!host)
-        ErrorHanding("gethostbyname... error");
+        error_handling("gethostbyname... error");
 
     printf("Official name: %s\n", host->h_name);
 
@@ -33,7 +31,7 @@ int main(int argc, char *argv[])
         printf("IP addr %d: %s\n", i + 1,
                inet_ntoa(*(struct in_addr *)host->h_addr_list[i]));
 
-    WSACleanup();
-
     return 0;
 }
+
+// gcc 08.gethostbyname_linux.c -o 08.gethostbyname_linux && ./08.gethostbyname_linux

@@ -1,13 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <netdb.h>
+#include <winsock2.h>
 
-#define IP "64.233.189.104"
+#define URL "www.baidu.com"
 
-void error_handling(const char *message)
+void ErrorHanding(const char *message)
 {
     fputs(message, stderr);
     fputc('\n', stderr);
@@ -16,13 +13,13 @@ void error_handling(const char *message)
 
 int main(int argc, char *argv[])
 {
-    struct sockaddr_in addr;
-    memset(&addr, 0, sizeof(addr));
-    addr.sin_addr.s_addr = inet_addr(IP);
+    WSADATA wsaData;
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+        ErrorHanding("WSAStartup() error!");
 
-    struct hostent *host = gethostbyaddr((char *)&addr.sin_addr, 4, AF_INET);
+    struct hostent *host = gethostbyname(URL);
     if (!host)
-        error_handling("gethostbyaddr... error");
+        ErrorHanding("gethostbyname... error");
 
     printf("Official name: %s\n", host->h_name);
 
@@ -36,5 +33,9 @@ int main(int argc, char *argv[])
         printf("IP addr %d: %s\n", i + 1,
                inet_ntoa(*(struct in_addr *)host->h_addr_list[i]));
 
+    WSACleanup();
+
     return 0;
 }
+
+// gcc 08.gethostbyname_win.c -o 08.gethostbyname_win -lws2_32 && 08.gethostbyname_win

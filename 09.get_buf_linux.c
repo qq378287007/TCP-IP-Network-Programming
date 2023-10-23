@@ -16,13 +16,13 @@ int main(int argc, char *argv[])
 
     int snd_buf;
     socklen_t len = sizeof(snd_buf);
-    //输出缓冲大小
+    // 输出缓冲大小
     int state = getsockopt(sock, SOL_SOCKET, SO_SNDBUF, (void *)&snd_buf, &len);
     if (state)
         error_handling("getsockopt() error");
 
     int rcv_buf;
-    //输入缓冲大小
+    // 输入缓冲大小
     state = getsockopt(sock, SOL_SOCKET, SO_RCVBUF, (void *)&rcv_buf, &len);
     if (state)
         error_handling("getsockopt() error");
@@ -34,3 +34,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 09.get_buf_linux.c -o 09.get_buf_linux && ./09.get_buf_linux

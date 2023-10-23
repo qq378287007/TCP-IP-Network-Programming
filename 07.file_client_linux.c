@@ -48,3 +48,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 07.file_client_linux.c -o 07.file_client_linux && ./07.file_client_linux

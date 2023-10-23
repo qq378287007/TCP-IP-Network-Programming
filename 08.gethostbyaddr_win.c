@@ -42,3 +42,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 08.gethostbyaddr_win.c -o 08.gethostbyaddr_win -lws2_32 && 08.gethostbyaddr_win

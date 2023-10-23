@@ -10,7 +10,7 @@ void ErrorHanding(const char *message)
     exit(1);
 }
 
-void ShorSocketBufSize(SOCKET sock)
+void ShowSocketBufSize(SOCKET sock)
 {
     int snd_buf;
     int len = sizeof(snd_buf);
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 
     SOCKET sock = socket(PF_INET, SOCK_STREAM, 0);
 
-    ShorSocketBufSize(sock);
+    ShowSocketBufSize(sock);
 
     int snd_buf = 1024 * 3;
     int state = setsockopt(sock, SOL_SOCKET, SO_SNDBUF, (char *)&snd_buf, sizeof(snd_buf));
@@ -55,3 +55,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 09.buf_win.c -o 09.buf_win -lws2_32 && 09.buf_win

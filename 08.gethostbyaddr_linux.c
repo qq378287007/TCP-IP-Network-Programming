@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 
-#define URL "www.baidu.com"
+#define IP "64.233.189.104"
 
 void error_handling(const char *message)
 {
@@ -15,9 +16,13 @@ void error_handling(const char *message)
 
 int main(int argc, char *argv[])
 {
-    struct hostent *host = gethostbyname(URL);
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_addr.s_addr = inet_addr(IP);
+
+    struct hostent *host = gethostbyaddr((char *)&addr.sin_addr, 4, AF_INET);
     if (!host)
-        error_handling("gethostbyname... error");
+        error_handling("gethostbyaddr... error");
 
     printf("Official name: %s\n", host->h_name);
 
@@ -33,3 +38,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 08.gethostbyaddr_linux.c -o 08.gethostbyaddr_linux && ./08.gethostbyaddr_linux

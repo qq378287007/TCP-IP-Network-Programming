@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 	if (clnt_sock == INVALID_SOCKET)
 		ErrorHanding("accept() error");
 
-	FILE *fp = fopen("file_server_win.c", "rb");
+	FILE *fp = fopen("07.file_server_win.c", "rb");
 	int read_cnt;
 	char buf[BUF_SIZE];
 	while (read_cnt = fread((void *)buf, 1, BUF_SIZE, fp))
@@ -72,3 +72,5 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+
+// gcc 07.file_server_win.c -o 07.file_server_win -lws2_32 && 07.file_server_win

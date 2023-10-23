@@ -44,14 +44,14 @@ int main(int argc, char *argv[])
     if (clnt_sock == -1)
         error_handling("accept() error");
 
-    FILE *fp = fopen("file_server.c", "rb");
+    FILE *fp = fopen("07.file_server_linux.c", "rb");
     char buf[BUF_SIZE];
     int read_cnt;
     while (read_cnt = fread((void *)buf, 1, BUF_SIZE, fp))
         write(clnt_sock, buf, read_cnt);
     fclose(fp);
 
-    //关闭输出流，不再向客户端发送数据
+    // 关闭输出流，不再向客户端发送数据
     shutdown(clnt_sock, SHUT_WR);
 
     while (read_cnt = read(clnt_sock, buf, BUF_SIZE))
@@ -67,3 +67,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 07.file_server_linux.c -o 07.file_server_linux && ./07.file_server_linux
