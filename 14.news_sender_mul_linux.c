@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     mul_addr.sin_port = htons(PORT);          // Multicast Port
 
     FILE *fp;
-    if ((fp = fopen("news_sender_mul.c", "r")) == NULL)
+    if ((fp = fopen("14.news_sender_mul_linux.c", "r")) == NULL)
         error_handling("fopen() error");
     while (!feof(fp))
     {
@@ -55,3 +55,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 14.news_sender_mul_linux.c -o 14.news_sender_mul_linux && ./14.news_sender_mul_linux

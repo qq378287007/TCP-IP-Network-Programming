@@ -7,6 +7,7 @@
 
 #define IP "127.0.0.1"
 #define PORT 9999
+#define BUF_SIZE 30
 
 void error_handling(const char *message)
 {
@@ -33,8 +34,14 @@ int main(int argc, char *argv[])
         error_handling("connect() error");
 
     write(sock, "123", strlen("123"));
+    send(sock, "4", strlen("4"), MSG_OOB);
+
+    write(sock, "567", strlen("567"));
+    send(sock, "890", strlen("890"), MSG_OOB);
 
     close(sock);
 
     return 0;
 }
+
+// gcc 13.oob_send_linux.c -o 13.oob_send_linux && ./13.oob_send_linux

@@ -17,9 +17,11 @@ int main(int argc, char *argv[])
     else
     {
         char buf[BUF_SIZE];
-        read(fds[0], buf, BUF_SIZE);
+        read(fds[0], buf, BUF_SIZE); // 阻塞
         puts(buf);
     }
 
     return 0;
 }
+
+// gcc 11.pipe1.c -o 11.pipe1 && ./11.pipe1

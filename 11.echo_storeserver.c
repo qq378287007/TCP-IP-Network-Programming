@@ -116,3 +116,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 11.echo_storeserver.c -o 11.echo_storeserver && ./11.echo_storeserver

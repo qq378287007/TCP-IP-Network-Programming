@@ -37,3 +37,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 10.sigaction.c -o 10.sigaction && ./10.sigaction

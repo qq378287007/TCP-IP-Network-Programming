@@ -44,9 +44,8 @@ int main(int argc, char *argv[])
     mulAdr.sin_port = htons(PORT);          // Multicast Port
 
     FILE *fp;
-    if ((fp = fopen("news_sender_mul_win.c", "r")) == NULL)
-        ErrorHanding("fopen() error");
-
+    if ((fp = fopen("14.news_sender_mul_win.c", "r")) == NULL)
+        ErrorHanding("fopen() error!");
     while (!feof(fp))
     {
         char buf[BUF_SIZE] = {0};
@@ -62,3 +61,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 14.news_sender_mul_win.c -o 14.news_sender_mul_win -lws2_32 && ./14.news_sender_mul_win

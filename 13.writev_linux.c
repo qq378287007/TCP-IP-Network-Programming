@@ -19,3 +19,5 @@ int main(int argc, char *argv[])
     
     return 0;
 }
+
+// gcc 13.writev_linux.c -o 13.writev_linux && ./13.writev_linux

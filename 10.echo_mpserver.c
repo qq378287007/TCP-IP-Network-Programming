@@ -93,3 +93,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 10.echo_mpserver.c -o 10.echo_mpserver && ./10.echo_mpserver

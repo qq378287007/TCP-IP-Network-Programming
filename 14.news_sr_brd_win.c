@@ -37,9 +37,8 @@ void *sendSock(void *arg)
     sleep(1);
 
     FILE *fp;
-    if ((fp = fopen("news_sender_brd_win.c", "r")) == NULL)
-        ErrorHanding("fopen() error");
-
+    if ((fp = fopen("14.news_sender_brd_win.c", "r")) == NULL)
+        ErrorHanding("fopen() error!");
     while (!feof(fp))
     {
         char buf[BUF_SIZE] = {0};
@@ -61,7 +60,7 @@ void *recvSock(void *arg)
     {
         char buf[BUF_SIZE] = {0};
         int str_len = recvfrom(sock, buf, BUF_SIZE - 1, 0, NULL, 0);
-        //int str_len = read(sock, buf, BUF_SIZE - 1);
+        // int str_len = read(sock, buf, BUF_SIZE - 1);
         if (str_len <= 0)
             break;
         buf[str_len] = 0;
@@ -78,15 +77,15 @@ int main(int argc, char *argv[])
 
     SOCKET sock = socket(PF_INET, SOCK_DGRAM, 0);
     if (sock == INVALID_SOCKET)
-        ErrorHanding("socket() error");
+        ErrorHanding("socket() error!");
 
     int opt = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (const char *)&opt, sizeof(opt)) < 0)
-        ErrorHanding("setsockopt() error");
+        ErrorHanding("setsockopt() error!");
 
     int so_brd = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (void *)&so_brd, sizeof(so_brd)) < 0)
-        ErrorHanding("setsockopt() error");
+        ErrorHanding("setsockopt() error!");
 
     int addr_size = sizeof(SOCKADDR_IN);
     SOCKADDR_IN localAdr;
@@ -95,7 +94,7 @@ int main(int argc, char *argv[])
     localAdr.sin_addr.s_addr = htonl(INADDR_ANY);
     localAdr.sin_port = htons(PORT);
     if (bind(sock, (struct sockaddr *)&localAdr, addr_size) == SOCKET_ERROR)
-        ErrorHanding("bind() error");
+        ErrorHanding("bind() error!");
 
     pthread_t t1;
     pthread_create(&t1, NULL, sendSock, (void *)&sock);
@@ -109,3 +108,4 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+// gcc 14.news_sr_brd_win.c -o 14.news_sr_brd_win -lws2_32 && ./14.news_sr_brd_win

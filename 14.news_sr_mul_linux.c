@@ -37,7 +37,7 @@ void *send_sock(void *arg)
     sleep(1);
     
     FILE *fp;
-    if ((fp = fopen("news_sr_mul.c", "r")) == NULL)
+    if ((fp = fopen("14.news_sr_mul_linux.c", "r")) == NULL)
         error_handling("fopen() error");
     while (!feof(fp))
     {
@@ -106,3 +106,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 14.news_sr_mul_linux.c -o 14.news_sr_mul_linux && ./14.news_sr_mul_linux

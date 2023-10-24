@@ -24,7 +24,7 @@ void *send_sock(void *arg)
 
     int so_brd = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (void *)&so_brd, sizeof(so_brd)) == -1)
-        error_handling("setsockopt() error");
+        error_handling("setsockopt() error!");
 
     socklen_t addr_size = sizeof(struct sockaddr_in);
 
@@ -37,8 +37,8 @@ void *send_sock(void *arg)
     sleep(1);
 
     FILE *fp;
-    if ((fp = fopen("news_sr_brd.c", "r")) == NULL)
-        error_handling("fopen() error");
+    if ((fp = fopen("14news_sr_brd_linux.c", "r")) == NULL)
+        error_handling("fopen() error!");
     while (!feof(fp))
     {
         char buf[BUF_SIZE] = {0};
@@ -56,7 +56,7 @@ void *send_sock(void *arg)
 void *recv_sock(void *arg)
 {
     int sock = *(int *)arg;
-    
+
     socklen_t addr_size = sizeof(struct sockaddr_in);
     struct sockaddr_in recv_addr;
     memset(&recv_addr, 0, addr_size);
@@ -64,7 +64,7 @@ void *recv_sock(void *arg)
     recv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     recv_addr.sin_port = htons(PORT);
     if (bind(sock, (struct sockaddr *)&recv_addr, addr_size) == -1)
-        error_handling("bind() error");
+        error_handling("bind() error!");
 
     while (1)
     {
@@ -85,10 +85,10 @@ int main(int argc, char *argv[])
 {
     int sock = socket(PF_INET, SOCK_DGRAM, 0);
     if (sock == -1)
-        error_handling("socket() error");
+        error_handling("socket() error!");
     int opt = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (const void *)&opt, sizeof(opt)) == -1)
-        error_handling("setsockopt() error");
+        error_handling("setsockopt() error!");
 
     pthread_t t1;
     pthread_create(&t1, NULL, send_sock, (void *)&sock);
@@ -100,3 +100,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 14.news_sr_brd_linux.c -o 14.news_sr_brd_linux && ./14.news_sr_brd_linux

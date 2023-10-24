@@ -26,3 +26,5 @@ int main(int argc, char *argv[])
         return 0;
     }
 }
+
+// gcc 10.waitpid.c -o 10.waitpid && ./10.waitpid

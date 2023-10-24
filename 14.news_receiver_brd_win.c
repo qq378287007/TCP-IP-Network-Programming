@@ -22,11 +22,11 @@ int main(int argc, char *argv[])
 
     SOCKET hRecvSock = socket(PF_INET, SOCK_DGRAM, 0);
     if (hRecvSock == INVALID_SOCKET)
-        ErrorHanding("socket() error");
+        ErrorHanding("socket() error!");
 
     int opt = 1;
     if (setsockopt(hRecvSock, SOL_SOCKET, SO_REUSEADDR, (const char *)&opt, sizeof(opt)) < 0)
-        ErrorHanding("setsockopt() error");
+        ErrorHanding("setsockopt() error!");
 
     int addr_size = sizeof(SOCKADDR_IN);
     SOCKADDR_IN adr;
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     adr.sin_addr.s_addr = htonl(INADDR_ANY);
     adr.sin_port = htons(PORT);
     if (bind(hRecvSock, (struct sockaddr *)&adr, addr_size) == SOCKET_ERROR)
-        ErrorHanding("bind() error");
+        ErrorHanding("bind() error!");
 
     while (1)
     {
@@ -53,3 +53,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 14.news_receiver_brd_win.c -o 14.news_receiver_brd_win -lws2_32 && ./14.news_receiver_brd_win

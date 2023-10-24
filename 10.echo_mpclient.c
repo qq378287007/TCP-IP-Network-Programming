@@ -25,6 +25,7 @@ void read_routine(int sock)
         buf[str_len] = 0;
         printf("Message from server: %s\n", buf);
     }
+    close(sock);
 }
 
 void write_routine(int sock)
@@ -70,3 +71,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 10.echo_mpclient.c -o 10.echo_mpclient && ./10.echo_mpclient

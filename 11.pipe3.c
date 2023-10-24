@@ -27,8 +27,10 @@ int main(int argc, char *argv[])
         read(fds1[0], buf, BUF_SIZE);
         printf("Parent proc output: %s\n", buf);
         write(fds2[1], str2, sizeof(str2));
-        sleep(3); //防止父进程推出后弹出命令提示符
+        sleep(3); // 防止父进程退出后弹出命令提示符
     }
 
     return 0;
 }
+
+// gcc 11.pipe3.c -o 11.pipe3 && ./11.pipe3

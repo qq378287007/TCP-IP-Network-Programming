@@ -93,3 +93,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 12.echo_selectserver_linux.c -o 12.echo_selectserver_linux && ./12.echo_selectserver_linux

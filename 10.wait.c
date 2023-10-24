@@ -40,3 +40,5 @@ int main(int argc, char *argv[])
         }
     }
 }
+
+// gcc 10.wait.c -o 10.wait && ./10.wait

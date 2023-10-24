@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     {
         char str1[] = "Who are you?";
         write(fds[1], str1, sizeof(str1));
-        sleep(2); //防止管道内写入数据被本进程读取
+        sleep(2); // 防止管道内写入数据被本进程读取
         read(fds[0], buf, BUF_SIZE);
         printf("Child proc output: %s\n", buf);
     }
@@ -25,8 +25,10 @@ int main(int argc, char *argv[])
         read(fds[0], buf, BUF_SIZE);
         printf("Parent proc output: %s\n", buf);
         write(fds[1], str2, sizeof(str2));
-        sleep(3); //防止父进程推出后弹出命令提示符
+        sleep(3); // 防止父进程终止时，弹出命令提示符
     }
 
     return 0;
 }
+
+// gcc 11.pipe2.c -o 11.pipe2 && ./11.pipe2

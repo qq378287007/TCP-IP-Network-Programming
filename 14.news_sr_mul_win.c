@@ -42,9 +42,8 @@ void *sendSock(void *arg)
     sleep(1);
 
     FILE *fp;
-    if ((fp = fopen("news_sr_mul_win.c", "r")) == NULL)
-        ErrorHanding("fopen() error");
-
+    if ((fp = fopen("14.news_sr_mul_win.c", "r")) == NULL)
+        ErrorHanding("fopen() error!");
     while (!feof(fp))
     {
         char buf[BUF_SIZE] = {0};
@@ -67,7 +66,7 @@ void *recvSock(void *arg)
     join_adr.imr_multiaddr.s_addr = inet_addr(IP);
     join_adr.imr_interface.s_addr = htonl(INADDR_ANY);
     if (setsockopt(sock, IPPROTO_IP, IP_ADD_MEMBERSHIP, (void *)&join_adr, sizeof(join_adr)) == SOCKET_ERROR)
-        ErrorHanding("setsockopt() error");
+        ErrorHanding("setsockopt() error!");
 
     while (1)
     {
@@ -89,11 +88,11 @@ int main(int argc, char *argv[])
 
     SOCKET sock = socket(PF_INET, SOCK_DGRAM, 0);
     if (sock == INVALID_SOCKET)
-        ErrorHanding("socket() error");
+        ErrorHanding("socket() error!");
 
     int opt = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (const char *)&opt, sizeof(opt)) < 0)
-        ErrorHanding("setsockopt() error");
+        ErrorHanding("setsockopt() error!");
 
     int addr_size = sizeof(SOCKADDR_IN);
     SOCKADDR_IN localAdr;
@@ -102,7 +101,7 @@ int main(int argc, char *argv[])
     localAdr.sin_addr.s_addr = htonl(INADDR_ANY);
     localAdr.sin_port = htons(PORT);
     if (bind(sock, (struct sockaddr *)&localAdr, addr_size) == SOCKET_ERROR)
-        ErrorHanding("bind() error");
+        ErrorHanding("bind() error!");
 
     pthread_t t1;
     pthread_create(&t1, NULL, sendSock, (void *)&sock);
@@ -116,3 +115,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 14.news_sr_mul_win.c -o 14.news_sr_mul_win -lws2_32 && ./14.news_sr_mul_win

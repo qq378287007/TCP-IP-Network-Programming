@@ -5,7 +5,6 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
-#define IP "224.1.1.2"
 #define PORT 9999
 #define BUF_SIZE 30
 
@@ -20,11 +19,11 @@ int main(int argc, char *argv[])
 {
     int recv_sock = socket(PF_INET, SOCK_DGRAM, 0);
     if (recv_sock == -1)
-        error_handling("socket() error");
+        error_handling("socket() error!");
 
     int opt = 1;
     if (setsockopt(recv_sock, SOL_SOCKET, SO_REUSEADDR, (const void *)&opt, sizeof(opt)) == -1)
-        error_handling("setsockopt() error");
+        error_handling("setsockopt() error!");
 
     socklen_t addr_size = sizeof(struct sockaddr_in);
     struct sockaddr_in recv_addr;
@@ -33,13 +32,7 @@ int main(int argc, char *argv[])
     recv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     recv_addr.sin_port = htons(PORT);
     if (bind(recv_sock, (struct sockaddr *)&recv_addr, addr_size) == -1)
-        error_handling("bind() error");
-
-    struct ip_mreq join_adr;
-    join_adr.imr_multiaddr.s_addr = inet_addr(IP);
-    join_adr.imr_interface.s_addr = htonl(INADDR_ANY);
-    if (setsockopt(recv_sock, IPPROTO_IP, IP_ADD_MEMBERSHIP, (void *)&join_adr, sizeof(join_adr)) == -1)
-        error_handling("setsockopt() error");
+        error_handling("bind() error!");
 
     while (1)
     {
@@ -55,3 +48,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 14.news_receiver_brd_linux.c -o 14.news_receiver_brd_linux && ./14.news_receiver_brd_linux

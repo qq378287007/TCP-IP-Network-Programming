@@ -51,3 +51,5 @@ int main(int argc, char *argv[])
         }
     }
 }
+
+// gcc 10.remove_zombie.c -o 10.remove_zombie && ./10.remove_zombie

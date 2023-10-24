@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 
     SOCKET sock = socket(PF_INET, SOCK_STREAM, 0);
     if (sock == INVALID_SOCKET)
-        ErrorHanding("socket() error");
+        ErrorHanding("socket() error!");
 
     int addr_size = sizeof(SOCKADDR_IN);
 
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     addr.sin_port = htons(PORT);
 
     if (connect(sock, (SOCKADDR *)&addr, addr_size) == SOCKET_ERROR)
-        ErrorHanding("connect() error");
+        ErrorHanding("connect() error!");
 
     send(sock, "123", strlen("123"), 0);
     send(sock, "4", strlen("4"), MSG_OOB);
@@ -49,3 +49,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 13.oob_send_win.c -o 13.oob_send_win -lws2_32 && 13.oob_send_win

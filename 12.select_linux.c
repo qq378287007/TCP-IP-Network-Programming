@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     {
         fd_set temps = reads;
         struct timeval timeout = {5, 0};
-        //调用select后，timeout的tv_sec和tv_usec将被替换为超时前剩余时间
+        // 调用select后，timeout的tv_sec和tv_usec将被替换为超时前剩余时间
         int result = select(1, &temps, 0, 0, &timeout);
         if (result == -1)
         {
@@ -41,3 +41,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 12.select_linux.c -o 12.select_linux && ./12.select_linux

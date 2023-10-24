@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
+#define IP "224.1.1.2"
 #define PORT 9999
 #define BUF_SIZE 30
 
@@ -34,6 +35,12 @@ int main(int argc, char *argv[])
     if (bind(recv_sock, (struct sockaddr *)&recv_addr, addr_size) == -1)
         error_handling("bind() error");
 
+    struct ip_mreq join_adr;
+    join_adr.imr_multiaddr.s_addr = inet_addr(IP);
+    join_adr.imr_interface.s_addr = htonl(INADDR_ANY);
+    if (setsockopt(recv_sock, IPPROTO_IP, IP_ADD_MEMBERSHIP, (void *)&join_adr, sizeof(join_adr)) == -1)
+        error_handling("setsockopt() error");
+
     while (1)
     {
         char buf[BUF_SIZE] = {0};
@@ -48,3 +55,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 14.news_receiver_mul_linux.c -o 14.news_receiver_mul_linux && ./14.news_receiver_mul_linux

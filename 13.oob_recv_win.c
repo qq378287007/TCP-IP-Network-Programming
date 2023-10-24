@@ -71,13 +71,14 @@ int main(int argc, char *argv[])
                 {
                     char buf[BUF_SIZE];
                     // MSG_OOB，一次只发送一个字符
-                    // MSG_OOB，一次可以读取多个字符
-                    int str_len = recv(reads.fd_array[i], buf, BUF_SIZE - 1, MSG_OOB);
+                    // MSG_OOB，一次可以读取多个字符(多次发送的MSG_OOB，可能一次性全部读取)
+                    //int str_len = recv(reads.fd_array[i], buf, BUF_SIZE - 1, MSG_OOB);
+                    int str_len = recv(reads.fd_array[i], buf, 1, MSG_OOB);
                     buf[str_len] = 0;
                     printf("Urgent message: %s\n", buf);
                 }
             }
-            
+
             if (FD_ISSET(reads.fd_array[i], &reads_copy))
             {
                 if (reads.fd_array[i] == listen_sock)
@@ -115,3 +116,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 13.oob_recv_win.c -o 13.oob_recv_win -lws2_32 && 13.oob_recv_win

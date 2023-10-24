@@ -22,7 +22,8 @@ void error_handling(const char *message)
 void urg_handler(int signo)
 {
     char buf[BUF_SIZE];
-    int str_len = recv(recv_sock, buf, sizeof(buf) - 1, MSG_OOB); //一次urg_handler调用只能读取1个字节
+    //int str_len = recv(recv_sock, buf, sizeof(buf) - 1, MSG_OOB); //一次urg_handler调用只能读取1个字节
+    int str_len = recv(recv_sock, buf, 1, MSG_OOB); 
     buf[str_len] = 0;
     printf("Urgent message: %s\n", buf);
 }
@@ -55,11 +56,11 @@ int main(int argc, char *argv[])
     recv_sock = accept(acpt_sock, (struct sockaddr *)&serv_adr, &addr_size);
 
     // fcntl函数控制文件描述符
-    //指定connect_sock套接字的拥有者（F_SETOWN）为getpid()表示的进程
+    //指定recv_sock套接字的拥有者（F_SETOWN）为getpid()表示的进程
     //套接字的拥有者实际为操作系统
     //这里指负责套接字所有事务的主体
     //处理SIGURG信号的主体为当前进程，并非所有进程都会处理SIGURG信号
-    //文件描述符connect_sock指向的套接字引发的SIGURG信号处理进程变为将getpid函数返回值用作ID的进程
+    //文件描述符recv_sock指向的套接字引发的SIGURG信号处理进程变为将getpid函数返回值用作ID的进程
     fcntl(recv_sock, F_SETOWN, getpid());
 
     struct sigaction act;
@@ -84,3 +85,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 13.oob_recv_linux.c -o 13.oob_recv_linux && ./13.oob_recv_linux

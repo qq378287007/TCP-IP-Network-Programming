@@ -20,15 +20,15 @@ int main(int argc, char *argv[])
 {
     int send_sock = socket(PF_INET, SOCK_DGRAM, 0);
     if (send_sock == -1)
-        error_handling("socket() error");
+        error_handling("socket() error!");
 
     int opt = 1;
     if (setsockopt(send_sock, SOL_SOCKET, SO_REUSEADDR, (const void *)&opt, sizeof(opt)) == -1)
-        error_handling("setsockopt() error");
+        error_handling("setsockopt() error!");
 
     int so_brd = 1;
     if (setsockopt(send_sock, SOL_SOCKET, SO_BROADCAST, (void *)&so_brd, sizeof(so_brd)) == -1)
-        error_handling("setsockopt() error");
+        error_handling("setsockopt() error!");
 
     socklen_t addr_size = sizeof(struct sockaddr_in);
 
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     brd_addr.sin_port = htons(PORT);          // Broad Port
 
     FILE *fp;
-    if ((fp = fopen("news_sender_brd.c", "r")) == NULL)
+    if ((fp = fopen("14.news_sender_brd_win.c", "r")) == NULL)
         error_handling("fopen() error");
     while (!feof(fp))
     {
@@ -54,3 +54,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 14.news_sender_brd_linux.c -o 14.news_sender_brd_linux && ./14.news_sender_brd_linux

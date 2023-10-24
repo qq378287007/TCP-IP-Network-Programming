@@ -23,15 +23,15 @@ int main(int argc, char *argv[])
 
     SOCKET hSendSock = socket(PF_INET, SOCK_DGRAM, 0);
     if (hSendSock == INVALID_SOCKET)
-        ErrorHanding("socket() error");
+        ErrorHanding("socket() error!");
 
     int opt = 1;
     if (setsockopt(hSendSock, SOL_SOCKET, SO_REUSEADDR, (const char *)&opt, sizeof(opt)) < 0)
-        ErrorHanding("setsockopt() error");
+        ErrorHanding("setsockopt() error!");
 
     int so_brd = 1;
     if (setsockopt(hSendSock, SOL_SOCKET, SO_BROADCAST, (void *)&so_brd, sizeof(so_brd)) < 0)
-        ErrorHanding("setsockopt() error");
+        ErrorHanding("setsockopt() error!");
 
     int addr_size = sizeof(SOCKADDR);
 
@@ -42,8 +42,8 @@ int main(int argc, char *argv[])
     brdAdr.sin_port = htons(PORT);          // Broad Port
 
     FILE *fp;
-    if ((fp = fopen("news_sender_brd_win.c", "r")) == NULL)
-        ErrorHanding("fopen() error");
+    if ((fp = fopen("14.news_sender_brd_win.c", "r")) == NULL)
+        ErrorHanding("fopen() error!");
 
     while (!feof(fp))
     {
@@ -60,3 +60,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 14.news_sender_brd_win.c -o 14.news_sender_brd_win -lws2_32 && ./14.news_sender_brd_win
