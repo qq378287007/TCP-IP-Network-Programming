@@ -14,7 +14,10 @@ int main(int argc, char *argv[])
     fputs("Network C Programming\n", fp);
     fclose(fp);
     // FILE指针关闭文件后，无需通过文件描述符关闭（close(fd);）
-    //文件描述符fd变成无意义的整数
+    // 文件描述符fd变成无意义的整数
 
     return 0;
 }
+
+// gcc 15.desto.c -o 15.desto && ./15.desto
+// cat data.dat

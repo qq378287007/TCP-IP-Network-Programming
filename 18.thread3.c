@@ -29,3 +29,5 @@ int main(int argc, char *argv[])
 	printf("result: %d\n", sum);
 	return 0;
 };
+
+// gcc 18.thread3.c -D_REENTRANT -o 18.thread3 && ./18.thread3

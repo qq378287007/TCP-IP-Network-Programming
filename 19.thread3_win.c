@@ -35,3 +35,5 @@ int main(int argc, char *argv[])
     printf("result: %lld\n", num);
     return 0;
 };
+
+// gcc 19.thread3_win.c -o 19.thread3_win && 19.thread3_win

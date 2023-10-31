@@ -10,12 +10,10 @@ static HANDLE hEvent;
 unsigned WINAPI NumberOfA(void *arg)
 {
 	int cnt = 0;
-	WaitForSingleObject(hEvent, INFINITE);
+	WaitForSingleObject(hEvent, INFINITE); // 2
 	for (int i = 0; str[i] != 0; i++)
-	{
 		if (str[i] == 'A')
 			cnt++;
-	}
 	printf("Num of A: %d\n", cnt);
 	return 0;
 }
@@ -23,12 +21,10 @@ unsigned WINAPI NumberOfA(void *arg)
 unsigned WINAPI NumberOfOthers(void *arg)
 {
 	int cnt = 0;
-	WaitForSingleObject(hEvent, INFINITE);
+	WaitForSingleObject(hEvent, INFINITE); // 2
 	for (int i = 0; str[i] != 0; i++)
-	{
 		if (str[i] != 'A')
 			cnt++;
-	}
 	printf("Num of others: %d\n", cnt);
 	return 0;
 }
@@ -42,18 +38,21 @@ int main(int argc, char *argv[])
 	HANDLE id_t2 = (HANDLE)_beginthreadex(NULL, 0, NumberOfOthers, NULL, 0, 0);
 
 	fputs("Input string: ", stdout);
-	fgets(str, STR_LEN, stdin);
+	fgets(str, STR_LEN, stdin); // 0
 
-	//事件设置为signaled状态
+	// 事件设置为signaled状态
 	// id_t1和id_t2两个线程同时摆脱等待状态（manual-reset模式，事件对象会一直处于signaled状态）
-	SetEvent(hEvent);
+	// 触发两个线程
+	SetEvent(hEvent); // 1
 
-	WaitForSingleObject(id_t1, INFINITE);
-	WaitForSingleObject(id_t2, INFINITE);
+	WaitForSingleObject(id_t1, INFINITE); // 3
+	WaitForSingleObject(id_t2, INFINITE); // 4
 
-	//事件设置为not-signaled状态
+	// 事件设置为not-signaled状态
 	ResetEvent(hEvent);
 
 	CloseHandle(hEvent);
 	return 0;
 };
+
+// gcc 20.SyncEvent_win.c -o 20.SyncEvent_win && 20.SyncEvent_win

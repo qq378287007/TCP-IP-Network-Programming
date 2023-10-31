@@ -19,11 +19,11 @@ int main(int argc, char *argv[])
 {
     int serv_sock = socket(PF_INET, SOCK_STREAM, 0);
     if (serv_sock == -1)
-        error_handling("socket() error");
+        error_handling("socket() error!");
 
     int opt = 1;
     if (setsockopt(serv_sock, SOL_SOCKET, SO_REUSEADDR, (const void *)&opt, sizeof(opt)) == -1)
-        error_handling("setsockopt() error");
+        error_handling("setsockopt() error!");
 
     socklen_t addr_size = sizeof(struct sockaddr_in);
 
@@ -34,15 +34,15 @@ int main(int argc, char *argv[])
     serv_addr.sin_port = htons(PORT);
 
     if (bind(serv_sock, (struct sockaddr *)&serv_addr, addr_size) == -1)
-        error_handling("bind() error");
+        error_handling("bind() error!");
 
     if (listen(serv_sock, 5) == -1)
-        error_handling("listen() error");
+        error_handling("listen() error!");
 
     struct sockaddr_in clnt_addr;
     int clnt_sock = accept(serv_sock, (struct sockaddr *)&clnt_addr, &addr_size);
     if (clnt_sock == -1)
-        error_handling("accept() error");
+        error_handling("accept() error!");
 
     FILE *readfp = fdopen(clnt_sock, "r");
     FILE *writefp = fdopen(dup(clnt_sock), "w");
@@ -51,10 +51,10 @@ int main(int argc, char *argv[])
     fputs("I love all of the world.\n", writefp);
     fputs("You are awesome!\n", writefp);
     fflush(writefp);
-    
-	//调用shutdown函数，无论复制出多少文件描述符
-	//都进入半关闭状态，同时传递EOF
-	shutdown(fileno(writefp), SHUT_WR);
+
+    // 调用shutdown函数，无论复制出多少文件描述符
+    // 都进入半关闭状态，同时传递EOF
+    shutdown(fileno(writefp), SHUT_WR);
     fclose(writefp);
 
     char buf[BUF_SIZE] = {0};
@@ -66,3 +66,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 16.sep_serv2.c -o 16.sep_serv2 && ./16.sep_serv2

@@ -11,10 +11,10 @@ int main(int argc, char *argv[])
         fputs("file open error", stdout);
         return -1;
     }
-    
+
     printf("first file descriptor: %d\n", fd);
     write(fd, "tcp/ip\n", strlen("tcp/ip\n"));
-    //close(fd);
+    // close(fd);
 
     FILE *fp = fdopen(fd, "w");
     fputs("Network C Programming\n", fp);
@@ -23,3 +23,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 15.todes.c -o 15.todes && ./15.todes

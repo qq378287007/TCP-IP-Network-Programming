@@ -4,8 +4,8 @@
 
 int main(int argc, char *argv[])
 {
-    FILE *fp1 = fopen("stdcpy.c", "r");
-    FILE *fp2 = fopen("stdcpy.c.bak", "w");
+    FILE *fp1 = fopen("15.stdcpy.c", "r");
+    FILE *fp2 = fopen("15.stdcpy.c.bak", "w");
 
     char buf[BUF_SIZE];
     while ((fgets(buf, sizeof(buf), fp1)) != NULL)
@@ -15,3 +15,5 @@ int main(int argc, char *argv[])
     fclose(fp1);
     return 0;
 }
+
+// gcc 15.stdcpy.c -o 15.stdcpy && ./15.stdcpy

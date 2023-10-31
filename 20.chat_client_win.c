@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <process.h>
 #include <time.h>
+#include <winsock2.h>
 
 #define IP "127.0.0.1"
 #define PORT 9999
@@ -49,7 +50,8 @@ unsigned WINAPI send_msg(void *arg)
 		fgets(msg, BUF_SIZE - 1, stdin);
 		if (!strcmp(msg, "q\n") || !strcmp(msg, "Q\n"))
 		{
-			closesocket(sock);
+			// closesocket(sock);
+			shutdown(sock, SD_SEND);
 			exit(0);
 		}
 		char name_msg[NAME_SIZE + BUF_SIZE + 3];
@@ -68,9 +70,15 @@ unsigned WINAPI recv_msg(void *arg)
 		int str_len = recv(sock, name_msg, NAME_SIZE + BUF_SIZE - 1, 0);
 		if (str_len == -1)
 			return -1;
-		name_msg[str_len] = 0;
-		fputs(name_msg, stdout);
+		else if (str_len == 0)
+			break;
+		else
+		{
+			name_msg[str_len] = 0;
+			fputs(name_msg, stdout);
+		}
 	}
+	closesocket(sock);
 	return 0;
 }
 
@@ -82,7 +90,7 @@ int main(int argc, char *argv[])
 
 	SOCKET sock = socket(PF_INET, SOCK_STREAM, 0);
 	if (sock == INVALID_SOCKET)
-		ErrorHanding("socket() error");
+		ErrorHanding("socket() error!");
 
 	int addr_size = sizeof(SOCKADDR_IN);
 
@@ -93,7 +101,7 @@ int main(int argc, char *argv[])
 	addr.sin_port = htons(PORT);
 
 	if (connect(sock, (SOCKADDR *)&addr, addr_size) == SOCKET_ERROR)
-		ErrorHanding("connect() error");
+		ErrorHanding("connect() error!");
 
 	HANDLE snd_thread = (HANDLE)_beginthreadex(NULL, 0, send_msg, (void *)&sock, 0, NULL);
 	HANDLE rcv_thread = (HANDLE)_beginthreadex(NULL, 0, recv_msg, (void *)&sock, 0, NULL);
@@ -107,3 +115,5 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+
+// gcc 20.chat_client_win.c -o 20.chat_client_win -lws2_32 && 20.chat_client_win

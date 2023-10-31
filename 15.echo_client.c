@@ -49,13 +49,15 @@ int main(int argc, char *argv[])
         fputs(message, writefp);
         fflush(writefp);
 
-        fgets(message, BUF_SIZE-1, readfp);
+        fgets(message, BUF_SIZE - 1, readfp);
         printf("Message from server : %s\n", message);
     }
     fclose(readfp);
     fclose(writefp);
 
     close(sock);
-    
+
     return 0;
 }
+
+// gcc 15.echo_client.c -o 15.echo_client && ./15.echo_client

@@ -31,3 +31,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 19.thread1_win.c -o 19.thread1_win && 19.thread1_win

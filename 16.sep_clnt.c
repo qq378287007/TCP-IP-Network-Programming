@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     while (1)
     {
         char buf[BUF_SIZE] = {0};
-        if (fgets(buf, BUF_SIZE - 1, readfp) == NULL)
+        if (fgets(buf, BUF_SIZE - 1, readfp) == NULL) // 收到EOF返回NULL
             break;
         fputs(buf, stdout);
         fflush(stdout);
@@ -54,3 +54,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 16.sep_clnt.c -o 16.sep_clnt && ./16.sep_clnt

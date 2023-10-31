@@ -53,7 +53,6 @@ int main(int argc, char *argv[])
         FILE *writefp = fdopen(clnt_sock, "w");
         while (!feof(readfp))
         {
-
             char message[BUF_SIZE];
             fgets(message, BUF_SIZE, readfp);
             fputs(message, writefp);
@@ -69,3 +68,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 15.echo_stdserver.c -o 15.echo_stdserver && ./15.echo_stdserver

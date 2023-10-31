@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 
     SOCKET hSock = socket(PF_INET, SOCK_STREAM, 0);
     if (hSock == INVALID_SOCKET)
-        ErrorHanding("socket() error");
+        ErrorHanding("socket() error!");
 
     int szAddr = sizeof(SOCKADDR_IN);
 
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     servAddr.sin_port = htons(PORT);
 
     if (connect(hSock, (SOCKADDR *)&servAddr, szAddr) == SOCKET_ERROR)
-        ErrorHanding("connect() error");
+        ErrorHanding("connect() error!");
     else
         puts("Connected.......");
 
@@ -64,3 +64,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 23.StableEchoClnt_win.c -o 23.StableEchoClnt_win -lws2_32 && 23.StableEchoClnt_win

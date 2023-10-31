@@ -5,8 +5,8 @@
 
 int main(int argc, char *argv[])
 {
-    int fd1 = open("syscpy.c", O_RDONLY);
-    int fd2 = open("syscpy.c.bak", O_WRONLY | O_CREAT | O_TRUNC);
+    int fd1 = open("15.syscpy.c", O_RDONLY);
+    int fd2 = open("15.syscpy.c.bak", O_WRONLY | O_CREAT | O_TRUNC);
 
     char buf[BUF_SIZE];
     int len;
@@ -18,3 +18,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 15.syscpy.c -o 15.syscpy && ./15.syscpy

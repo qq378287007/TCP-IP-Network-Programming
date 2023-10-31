@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
     SOCKET hSock = WSASocket(PF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
     if (hSock == INVALID_SOCKET)
-        ErrorHanding("WSASocket() error");
+        ErrorHanding("WSASocket() error!");
 
     SOCKADDR_IN servAddr;
     memset(&servAddr, 0, sizeof(SOCKADDR_IN));
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     servAddr.sin_port = htons(PORT);
 
     if (connect(hSock, (SOCKADDR *)&servAddr, sizeof(SOCKADDR_IN)) == SOCKET_ERROR)
-        ErrorHanding("connect() error");
+        ErrorHanding("connect() error!");
 
     WSAEVENT evObj = WSACreateEvent();
 
@@ -43,15 +43,17 @@ int main(int argc, char *argv[])
     DWORD sendBytes = 0;
     if (WSASend(hSock, &dataBuf, 1, &sendBytes, 0, &overlapped, NULL) == SOCKET_ERROR)
     {
-        if (WSAGetLastError() == WSA_IO_PENDING) //send尚未完成（pending）
+        if (WSAGetLastError() == WSA_IO_PENDING) // send尚未完成（pending）
         {
             puts("Background data send");
+            //等待发送完成
             WSAWaitForMultipleEvents(1, &evObj, TRUE, WSA_INFINITE, FALSE);
+            //获取发送字节数
             WSAGetOverlappedResult(hSock, &overlapped, &sendBytes, FALSE, NULL);
         }
         else
         {
-            ErrorHanding("WSASend() error");
+            ErrorHanding("WSASend() error!");
         }
     }
 
@@ -65,3 +67,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 22.OverlappedSend_win.c -o 22.OverlappedSend_win -lws2_32 && 22.OverlappedSend_win

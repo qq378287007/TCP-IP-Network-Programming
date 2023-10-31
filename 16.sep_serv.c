@@ -51,11 +51,11 @@ int main(int argc, char *argv[])
     fputs("I love all of the world.\n", writefp);
     fputs("You are awesome!\n", writefp);
     fflush(writefp);
-    fclose(writefp);
+    fclose(writefp); // 全关闭，非半关闭
 
     char buf[BUF_SIZE] = {0};
 
-    fgets(buf, BUF_SIZE-1, readfp);
+    fgets(buf, BUF_SIZE - 1, readfp);
     fputs(buf, stdout);
     fclose(readfp);
 
@@ -63,3 +63,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 16.sep_serv.c -o 16.sep_serv && ./16.sep_serv

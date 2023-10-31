@@ -42,3 +42,5 @@ int main(int argc, char *argv[])
 	printf("result: %lld\n", num);
 	return 0;
 };
+
+// gcc 20.SyncMutex_win.c -o 20.SyncMutex_win && 20.SyncMutex_win

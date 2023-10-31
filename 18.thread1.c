@@ -27,3 +27,5 @@ int main(int argc, char *argv[])
 	puts("end of main");
 	return 0;
 };
+
+// gcc 18.thread1.c -o 18.thread1 && ./18.thread1

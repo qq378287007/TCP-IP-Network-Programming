@@ -43,3 +43,5 @@ int main(int argc, char *argv[])
 	pthread_mutex_destroy(&mutex);
 	return 0;
 };
+
+// gcc 18.mutex.c -D_REENTRANT -o 18.mutex && ./18.mutex

@@ -37,9 +37,9 @@ unsigned WINAPI handle_clnt(void *arg)
 	int str_len;
 	while ((str_len = recv(clnt_sock, msg, sizeof(msg), 0)) != 0)
 		send_msg(clnt_sock, msg, str_len);
-	closesocket(clnt_sock);
 
 	WaitForSingleObject(mutx, INFINITE);
+	closesocket(clnt_sock);
 	for (int i = 0; i < clnt_cnt; i++)
 		if (clnt_sock == clnt_socks[i])
 		{
@@ -63,11 +63,11 @@ int main(int argc, char *argv[])
 
 	SOCKET serv_sock = socket(PF_INET, SOCK_STREAM, 0);
 	if (serv_sock == INVALID_SOCKET)
-		ErrorHanding("socket() error");
+		ErrorHanding("socket() error!");
 
 	int opt = 1;
 	if (setsockopt(serv_sock, SOL_SOCKET, SO_REUSEADDR, (const char *)&opt, sizeof(opt)) < 0)
-		ErrorHanding("setsockopt() error");
+		ErrorHanding("setsockopt() error!");
 
 	int addr_size = sizeof(SOCKADDR_IN);
 
@@ -78,10 +78,10 @@ int main(int argc, char *argv[])
 	serv_addr.sin_port = htons(PORT);
 
 	if (bind(serv_sock, (SOCKADDR *)&serv_addr, addr_size) == SOCKET_ERROR)
-		ErrorHanding("bind() error");
+		ErrorHanding("bind() error!");
 
 	if (listen(serv_sock, 5) == SOCKET_ERROR)
-		ErrorHanding("listen() error");
+		ErrorHanding("listen() error!");
 
 	while (1)
 	{
@@ -105,3 +105,5 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+
+// gcc 20.chat_server_win.c -o 20.chat_server_win -lws2_32 && 20.chat_server_win

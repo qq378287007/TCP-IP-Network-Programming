@@ -37,3 +37,5 @@ int main(int argc, char *argv[])
 	printf("result: %lld\n", num);
 	return 0;
 };
+
+// gcc 18.thread4.c -D_REENTRANT -o 18.thread4 && ./18.thread4

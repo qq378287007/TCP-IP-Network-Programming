@@ -10,6 +10,14 @@
 #define BUF_SIZE 2048
 #define BUF_SMALL 100
 
+void error_handling(const char *message)
+{
+    fputs(message, stderr);
+    fputc('\n', stderr);
+    exit(1);
+}
+
+// 查找字符串str在buf中首次出现的位置
 int GetLine(const char *buf, const char *str)
 {
     int m = strlen(buf);
@@ -20,20 +28,27 @@ int GetLine(const char *buf, const char *str)
     return -1;
 }
 
-void error_handling(const char *message)
+// 根据文件名的后缀返回对应的MIME类型
+char *ContentType(char *file)
 {
-    fputs(message, stderr);
-    fputc('\n', stderr);
-    exit(1);
+    char extension[BUF_SMALL] = {0};
+    int n = GetLine(file, ".");
+    strcpy(extension, file + n + 1);
+
+    if (!strcmp(extension, "html") || !strcmp(extension, "htm"))
+        return "text/html";
+    else
+        return "text/plain";
 }
 
+// 返回错误响应
 void SendErrorMSG(FILE *sock)
 {
     char protocol[] = "HTTP/1.0 400 Bad Request\r\n";
     char servName[] = "Server: simple web server\r\n";
     char cntType[] = "Content-Type: text/html\r\n\r\n";
     char content[] = "<html><head><title>NETWORK</title></head><body>"
-                     "<font size=+5>error!<br>filename and method!</font>"
+                     "<font size=+5>error!<br/>filename and method!</font>"
                      "</body></html>";
     char cntLen[256];
     sprintf(cntLen, "Content-Length: %ld\r\n", strlen(content));
@@ -47,18 +62,7 @@ void SendErrorMSG(FILE *sock)
     fflush(sock);
 }
 
-char *ContentType(char *file)
-{
-    char extension[BUF_SMALL] = {0};
-    int n = GetLine(file, ".");
-    strcpy(extension, file + n + 1);
-
-    if (!strcmp(extension, "html") || !strcmp(extension, "htm"))
-        return "text/html";
-    else
-        return "text/plain";
-}
-
+// 读取文件内容，作为响应数据发送
 void SendData(FILE *sock, char *ct, char *fileName)
 {
     char protocol[] = "HTTP/1.0 200 OK\r\n";
@@ -72,13 +76,13 @@ void SendData(FILE *sock, char *ct, char *fileName)
         SendErrorMSG(sock);
         return;
     }
-    fseek(fp, 0, SEEK_END);     //将文件指针指向该文件的最后
-    long file_size = ftell(fp); //文件大小，大于等于文件字符数（多余字符为NULL）
+    fseek(fp, 0, SEEK_END);     // 将文件指针指向该文件的最后
+    long file_size = ftell(fp); // 文件大小，大于等于文件字符数（多余字符为NULL）
 
     char *tmp = (char *)malloc(file_size);
     memset(tmp, '\0', file_size);
-    fseek(fp, 0, SEEK_SET);                  //重新将指针指向文件首部
-    fread(tmp, sizeof(char), file_size, fp); //开始读取整个文件
+    fseek(fp, 0, SEEK_SET);                  // 重新将指针指向文件首部
+    fread(tmp, sizeof(char), file_size, fp); // 开始读取整个文件
     fclose(fp);
 
     char cntLen[256];
@@ -105,17 +109,18 @@ void *RequestHandler(void *arg)
     FILE *clnt_write = fdopen(dup(hClntSock), "w");
 
     char buf[BUF_SIZE] = {0};
-    if (fgets(buf, BUF_SIZE - 1, clnt_read) == NULL)
+    if (fgets(buf, BUF_SIZE - 1, clnt_read) == NULL) // 一次性读取所有请求内容
     {
         SendErrorMSG(clnt_write);
         fclose(clnt_read);
         fclose(clnt_write);
         return (void *)1;
     }
+
     char line[256] = {0};
-    int n = GetLine(buf, "\r\n");
-    strncpy(line, buf, n);
-    if (strstr(line, "HTTP/") == NULL)
+    int n = GetLine(buf, "\r\n");      // 实际上，只需要读取请求行
+    strncpy(line, buf, n);             // 请求行
+    if (strstr(line, "HTTP/") == NULL) // 协议
     {
         SendErrorMSG(clnt_write);
         fclose(clnt_read);
@@ -126,7 +131,7 @@ void *RequestHandler(void *arg)
     char method[BUF_SMALL] = {0};
     n = GetLine(line, " /");
     strncpy(method, line, n);
-    if (strcmp(method, "GET"))
+    if (strcmp(method, "GET")) // 方法
     {
         SendErrorMSG(clnt_write);
         fclose(clnt_read);
@@ -143,10 +148,10 @@ void *RequestHandler(void *arg)
         fclose(clnt_write);
         return (void *)1;
     }
-    strncpy(fileName, line + 5, n);
+    strncpy(fileName, line + 5, n); // 请求文件
 
     char ct[BUF_SMALL] = {0};
-    strcpy(ct, ContentType(fileName));
+    strcpy(ct, ContentType(fileName)); // 文件类型
 
     SendData(clnt_write, ct, fileName);
 
@@ -159,11 +164,11 @@ int main(int argc, char *argv[])
 {
     int hServSock = socket(PF_INET, SOCK_STREAM, 0);
     if (hServSock == -1)
-        error_handling("socket() error");
+        error_handling("socket() error!");
 
     int opt = 1;
     if (setsockopt(hServSock, SOL_SOCKET, SO_REUSEADDR, (const void *)&opt, sizeof(opt)) == -1)
-        error_handling("setsockopt() error");
+        error_handling("setsockopt() error!");
 
     socklen_t szAddr = sizeof(struct sockaddr_in);
 
@@ -174,17 +179,17 @@ int main(int argc, char *argv[])
     servAddr.sin_port = htons(PORT);
 
     if (bind(hServSock, (struct sockaddr *)&servAddr, szAddr) == -1)
-        error_handling("bind() error");
+        error_handling("bind() error!");
 
     if (listen(hServSock, 5) == -1)
-        error_handling("listen() error");
+        error_handling("listen() error!");
 
     while (1)
     {
         struct sockaddr_in clntAddr;
         int hClntSock = accept(hServSock, (struct sockaddr *)&clntAddr, &szAddr);
         if (hClntSock == -1)
-            error_handling("accept() error");
+            error_handling("accept() error!");
 
         printf("Connection Request: %s:%d\n", inet_ntoa(clntAddr.sin_addr), ntohs(clntAddr.sin_port));
 
@@ -197,3 +202,6 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 24.webserv_linux.c -o 24.webserv_linux && ./24.webserv_linux
+// curl -v http://127.0.0.1:9999/24.webserv_linux.c

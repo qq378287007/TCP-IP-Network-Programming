@@ -52,3 +52,5 @@ int main(int argc, char *argv[])
 
 	return 0;
 };
+
+// gcc 18.semaphore.c -D_REENTRANT -o 18.semaphore && ./18.semaphore

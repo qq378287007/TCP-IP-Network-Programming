@@ -18,12 +18,10 @@ void ErrorHanding(const char *message)
 void CALLBACK CompRoutine(DWORD dwError, DWORD szRecvBytes, LPWSAOVERLAPPED lpOverlapped, DWORD flags)
 {
     if (dwError != 0)
-        ErrorHanding("CompRoutine() error");
-    else
-    {
-        recvBytes = szRecvBytes;
-        printf("Received message: %s\n", buf);
-    }
+        ErrorHanding("CompRoutine() error!");
+
+    recvBytes = szRecvBytes;
+    printf("Received message: %s\n", buf);
 }
 
 int main(int argc, char *argv[])
@@ -34,11 +32,11 @@ int main(int argc, char *argv[])
 
     SOCKET hServSock = WSASocket(PF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
     if (hServSock == INVALID_SOCKET)
-        ErrorHanding("WSAocket() error");
+        ErrorHanding("WSAocket() error!");
 
     int opt = 1;
     if (setsockopt(hServSock, SOL_SOCKET, SO_REUSEADDR, (const char *)&opt, sizeof(opt)) < 0)
-        ErrorHanding("setsockopt() error");
+        ErrorHanding("setsockopt() error!");
 
     int szAddr = sizeof(SOCKADDR_IN);
 
@@ -49,15 +47,15 @@ int main(int argc, char *argv[])
     servAddr.sin_port = htons(PORT);
 
     if (bind(hServSock, (SOCKADDR *)&servAddr, szAddr) == SOCKET_ERROR)
-        ErrorHanding("bind() error");
+        ErrorHanding("bind() error!");
 
     if (listen(hServSock, 5) == SOCKET_ERROR)
-        ErrorHanding("listen() error");
+        ErrorHanding("listen() error!");
 
     SOCKADDR_IN clntAddr;
     SOCKET hClntSock = accept(hServSock, (SOCKADDR *)&clntAddr, &szAddr);
     if (hClntSock == INVALID_SOCKET)
-        ErrorHanding("accept() error");
+        ErrorHanding("accept() error!");
 
     // WSAEVENT evObj = WSACreateEvent(); // dummy event object
     WSAOVERLAPPED overlapped;
@@ -67,6 +65,7 @@ int main(int argc, char *argv[])
     // dataBuf.len = BUF_SIZE;
     // dataBuf.buf = buf;
 
+    // 发送完成后，会等待alert status触发CompRoutine回调函数
     DWORD flags = 0;
     if (WSARecv(hClntSock, &dataBuf, 1, &recvBytes, &flags, &overlapped, CompRoutine) == SOCKET_ERROR)
     {
@@ -75,11 +74,11 @@ int main(int argc, char *argv[])
     }
 
     // int idx = WSAWaitForMultipleEvents(1, &evObj, FALSE, WSA_INFINITE, TRUE);
-    int idx = SleepEx(INFINITE, TRUE); //可以避免Dummy Object（WSAEVENT）的产生。
-    if (idx == WAIT_IO_COMPLETION)
-        puts("overlapped I/O Completed");
-    else
-        ErrorHanding("WSARecv() error");
+    // 调用SleepEx后会触发CompRoutine回调函数
+    int idx = SleepEx(INFINITE, TRUE); // 可以避免Dummy Object（WSAEVENT）的产生。
+    if (idx != WAIT_IO_COMPLETION)
+        ErrorHanding("WSARecv() error!");
+    puts("overlapped I/O Completed");
 
     // WSACloseEvent(evObj);
 
@@ -91,3 +90,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 22.CmplRoutinesRecv_win.c -o 22.CmplRoutinesRecv_win -lws2_32 && 22.CmplRoutinesRecv_win

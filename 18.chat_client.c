@@ -50,9 +50,10 @@ void *send_msg(void *arg)
 		if (!strcmp(msg, "q\n") || !strcmp(msg, "Q\n"))
 		{
 			close(sock);
+			// 半关闭
 			exit(0);
 		}
-		char name_msg[NAME_SIZE + BUF_SIZE+3] = {0};
+		char name_msg[NAME_SIZE + BUF_SIZE + 3] = {0};
 		sprintf(name_msg, "[%s] %s", name, msg);
 		write(sock, name_msg, strlen(name_msg));
 	}
@@ -68,6 +69,7 @@ void *recv_msg(void *arg)
 		int str_len = read(sock, name_msg, NAME_SIZE + BUF_SIZE - 1);
 		if (str_len == -1)
 			return (void *)-1;
+		// if (str_len == 0) exit(0);
 		name_msg[str_len] = 0;
 		fputs(name_msg, stdout);
 	}
@@ -78,7 +80,7 @@ int main(int argc, char *argv[])
 {
 	int sock = socket(PF_INET, SOCK_STREAM, 0);
 	if (sock == -1)
-		error_handling("socket() error");
+		error_handling("socket() error!");
 
 	socklen_t addr_size = sizeof(struct sockaddr_in);
 
@@ -89,7 +91,7 @@ int main(int argc, char *argv[])
 	addr.sin_port = htons(PORT);
 
 	if (connect(sock, (struct sockaddr *)&addr, addr_size) == -1)
-		error_handling("connect() error");
+		error_handling("connect() error!");
 
 	pthread_t snd_thread;
 	pthread_create(&snd_thread, NULL, send_msg, (void *)&sock);
@@ -105,3 +107,5 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+
+// gcc 18.chat_client.c -D_REENTRANT -o 18.chat_client && ./18.chat_client

@@ -32,11 +32,11 @@ int main(int argc, char *argv[])
 
     SOCKET serv_sock = socket(PF_INET, SOCK_STREAM, 0);
     if (serv_sock == INVALID_SOCKET)
-        ErrorHanding("socket() error");
+        ErrorHanding("socket() error!");
 
     int opt = 1;
     if (setsockopt(serv_sock, SOL_SOCKET, SO_REUSEADDR, (const char *)&opt, sizeof(opt)) < 0)
-        ErrorHanding("setsockopt() error");
+        ErrorHanding("setsockopt() error!");
 
     int addr_size = sizeof(SOCKADDR_IN);
 
@@ -47,15 +47,16 @@ int main(int argc, char *argv[])
     serv_addr.sin_port = htons(PORT);
 
     if (bind(serv_sock, (SOCKADDR *)&serv_addr, addr_size) == SOCKET_ERROR)
-        ErrorHanding("bind() error");
+        ErrorHanding("bind() error!");
 
     if (listen(serv_sock, 5) == SOCKET_ERROR)
-        ErrorHanding("listen() error");
+        ErrorHanding("listen() error!");
 
     WSAEVENT newEvent = WSACreateEvent();
-    if (WSAEventSelect(serv_sock, newEvent, FD_ACCEPT) == SOCKET_ERROR)
-        ErrorHanding("WSAEventSelect() error");
+    if (WSAEventSelect(serv_sock, newEvent, FD_ACCEPT) == SOCKET_ERROR) // 连接
+        ErrorHanding("WSAEventSelect() error!");
 
+    // 保存通过WSAEventSelect函数连接的套接字和事件对象
     SOCKET hSockArr[WSA_MAXIMUM_WAIT_EVENTS];
     WSAEVENT hEventArr[WSA_MAXIMUM_WAIT_EVENTS];
     int numOfClntSock = 0;
@@ -65,11 +66,15 @@ int main(int argc, char *argv[])
 
     while (1)
     {
+        // 等待事件对象句柄hEventArr转化为signaled状态
+        // 套接字集合中至少一个套接字发生了事件
         int posInfo = WSAWaitForMultipleEvents(numOfClntSock, hEventArr, FALSE, WSA_INFINITE, FALSE);
-        int startIdx = posInfo - WSA_WAIT_EVENT_0;
+        int startIdx = posInfo - WSA_WAIT_EVENT_0; // 最小起始索引
 
+        // 遍历事件对象
         for (int i = startIdx; i < numOfClntSock; i++)
         {
+            // 非阻塞获取事件对象状态
             int sigEventIdx = WSAWaitForMultipleEvents(1, &hEventArr[i], TRUE, 0, FALSE);
             if (sigEventIdx == WSA_WAIT_FAILED || sigEventIdx == WSA_WAIT_TIMEOUT)
             {
@@ -77,9 +82,12 @@ int main(int argc, char *argv[])
             }
             else
             {
+                // 获取事件类型
                 sigEventIdx = i;
                 WSANETWORKEVENTS netEvents;
                 WSAEnumNetworkEvents(hSockArr[sigEventIdx], hEventArr[sigEventIdx], &netEvents);
+
+                // 判断发生的事件
                 if (netEvents.lNetworkEvents & FD_ACCEPT)
                 {
                     if (netEvents.iErrorCode[FD_ACCEPT_BIT] != 0)
@@ -88,10 +96,11 @@ int main(int argc, char *argv[])
                         break;
                     }
 
+                    // 新连接
                     SOCKADDR_IN clnt_addr;
                     SOCKET clnt_sock = accept(hSockArr[sigEventIdx], (SOCKADDR *)&clnt_addr, &addr_size);
                     newEvent = WSACreateEvent();
-                    WSAEventSelect(clnt_sock, newEvent, FD_READ | FD_CLOSE);
+                    WSAEventSelect(clnt_sock, newEvent, FD_READ | FD_CLOSE); // 读取和关闭
 
                     hSockArr[numOfClntSock] = clnt_sock;
                     hEventArr[numOfClntSock] = newEvent;
@@ -105,9 +114,20 @@ int main(int argc, char *argv[])
                         puts("READ Error");
                         break;
                     }
+
+                    // 缓存区间读取数据，并发送
                     char msg[BUF_SIZE];
+                    /*
                     int strLen = recv(hSockArr[sigEventIdx], msg, sizeof(msg), 0);
                     send(hSockArr[sigEventIdx], msg, strLen, 0);
+                    */
+                    int strLen;
+                    do
+                    {
+                        strLen = recv(hSockArr[sigEventIdx], msg, sizeof(msg), 0);
+                        if (strLen > 0)
+                            send(hSockArr[sigEventIdx], msg, strLen, 0);
+                    } while (strLen == BUF_SIZE);
                 }
                 if (netEvents.lNetworkEvents & FD_CLOSE)
                 {
@@ -116,6 +136,8 @@ int main(int argc, char *argv[])
                         puts("CLOSE Error");
                         break;
                     }
+
+                    // 释放事件对象句柄，关闭套接字
                     WSACloseEvent(hEventArr[sigEventIdx]);
                     closesocket(hSockArr[sigEventIdx]);
 
@@ -133,3 +155,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 21.AsyncNotiEchoServ_win.c -o 21.AsyncNotiEchoServ_win -lws2_32 && 21.AsyncNotiEchoServ_win

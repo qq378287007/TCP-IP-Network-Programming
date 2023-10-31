@@ -20,11 +20,11 @@ int main(int argc, char *argv[])
 
     SOCKET hServSock = WSASocket(PF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
     if (hServSock == INVALID_SOCKET)
-        ErrorHanding("WSAocket() error");
+        ErrorHanding("WSAocket() error!");
 
     int opt = 1;
     if (setsockopt(hServSock, SOL_SOCKET, SO_REUSEADDR, (const char *)&opt, sizeof(opt)) < 0)
-        ErrorHanding("setsockopt() error");
+        ErrorHanding("setsockopt() error!");
 
     int szAddr = sizeof(SOCKADDR_IN);
 
@@ -35,15 +35,15 @@ int main(int argc, char *argv[])
     servAddr.sin_port = htons(PORT);
 
     if (bind(hServSock, (SOCKADDR *)&servAddr, szAddr) == SOCKET_ERROR)
-        ErrorHanding("bind() error");
+        ErrorHanding("bind() error!");
 
     if (listen(hServSock, 5) == SOCKET_ERROR)
-        ErrorHanding("listen() error");
+        ErrorHanding("listen() error!");
 
     SOCKADDR_IN clntAddr;
     SOCKET hClntSock = accept(hServSock, (SOCKADDR *)&clntAddr, &szAddr);
     if (hClntSock == INVALID_SOCKET)
-        ErrorHanding("accept() error");
+        ErrorHanding("accept() error!");
 
     WSAEVENT evObj = WSACreateEvent();
     WSAOVERLAPPED overlapped;
@@ -52,20 +52,22 @@ int main(int argc, char *argv[])
 
     char buf[BUF_SIZE] = {0};
     WSABUF dataBuf = {BUF_SIZE, buf};
-    
+
     DWORD recvBytes = 0;
     DWORD flags = 0;
     if (WSARecv(hClntSock, &dataBuf, 1, &recvBytes, &flags, &overlapped, NULL) == SOCKET_ERROR)
     {
-        if (WSAGetLastError() == WSA_IO_PENDING)
+        if (WSAGetLastError() == WSA_IO_PENDING) // recv尚未完成（pending）
         {
             puts("Background data receive");
+            // 等待接收完成
             WSAWaitForMultipleEvents(1, &evObj, TRUE, WSA_INFINITE, FALSE);
+            // 获取接收字节数
             WSAGetOverlappedResult(hClntSock, &overlapped, &recvBytes, FALSE, NULL);
         }
         else
         {
-            ErrorHanding("WSARecv() error");
+            ErrorHanding("WSARecv() error!");
         }
     }
 
@@ -81,3 +83,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 22.OverlappedRecv_win.c -o 22.OverlappedRecv_win -lws2_32 && 22.OverlappedRecv_win

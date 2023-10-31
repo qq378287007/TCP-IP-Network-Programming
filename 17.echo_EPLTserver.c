@@ -21,11 +21,11 @@ int main(int argc, char *argv[])
 {
     int serv_sock = socket(PF_INET, SOCK_STREAM, 0);
     if (serv_sock == -1)
-        error_handling("socket() error");
+        error_handling("socket() error!");
 
     int opt = 1;
     if (setsockopt(serv_sock, SOL_SOCKET, SO_REUSEADDR, (const void *)&opt, sizeof(opt)) == -1)
-        error_handling("setsockopt() error");
+        error_handling("setsockopt() error!");
 
     socklen_t addr_size = sizeof(struct sockaddr_in);
 
@@ -36,16 +36,16 @@ int main(int argc, char *argv[])
     serv_addr.sin_port = htons(PORT);
 
     if (bind(serv_sock, (struct sockaddr *)&serv_addr, addr_size) == -1)
-        error_handling("bind() error");
+        error_handling("bind() error!");
 
     if (listen(serv_sock, 5) == -1)
-        error_handling("listen() error");
+        error_handling("listen() error!");
 
-    struct epoll_event *ep_events = malloc(sizeof(struct epoll_event) * EPOLL_SIZE);
+    struct epoll_event *ep_events = (struct epoll_event *)malloc(sizeof(struct epoll_event) * EPOLL_SIZE);
     int epfd = epoll_create(EPOLL_SIZE);
 
     struct epoll_event event;
-    event.events = EPOLLIN; //读取事件
+    event.events = EPOLLIN; // 读取事件
     event.data.fd = serv_sock;
 
     epoll_ctl(epfd, EPOLL_CTL_ADD, serv_sock, &event);
@@ -67,8 +67,8 @@ int main(int argc, char *argv[])
             {
                 struct sockaddr_in clnt_addr;
                 int clnt_sock = accept(serv_sock, (struct sockaddr *)&clnt_addr, &addr_size);
-                event.events = EPOLLIN; //读取事件
-                //event.events = EPOLLIN|EPOLLET; 
+                event.events = EPOLLIN; // 读取事件
+                // event.events = EPOLLIN|EPOLLET;
                 event.data.fd = clnt_sock;
                 epoll_ctl(epfd, EPOLL_CTL_ADD, clnt_sock, &event);
                 printf("connected client: %d\n", clnt_sock);
@@ -98,3 +98,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+// gcc 17.echo_EPLTserver.c -o 17.echo_EPLTserver && ./17.echo_EPLTserver

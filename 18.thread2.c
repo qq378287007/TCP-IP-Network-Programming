@@ -38,3 +38,5 @@ int main(int argc, char *argv[])
 
 	return 0;
 };
+
+// gcc 18.thread2.c -o 18.thread2 && ./18.thread2
